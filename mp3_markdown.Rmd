@@ -10,6 +10,13 @@ install.packages("macleish")
 library(tidyverse)
 library(macleish)
 load("maple_sap.rda")
-
 ```
 
+```{r}
+# Weather data
+glimpse(whately_2015)
+
+# selecting important parts of weather data
+weather_info <- whately_2015 %>%
+  select(when, temperature, pressure)
+```
