@@ -27,5 +27,36 @@ as.interval(date, ymd())
 
 # Joining pressure and tempature form weather data with maple sap data
 
+<<<<<<< HEAD
 glimpse(weather_info)
+=======
+
+>>>>>>> a19a970bc2df51c4f519382977327683ce396441
 ```
+
+
+```{r}
+library(sf)
+library(leaflet)
+#creating a leaflet map with the other sugar houses
+
+my_points <- tribble(
+  ~point, ~lat, ~lon, ~geometry
+  "Dufresne's Sugarhouse", 42.415240, -72.761856, "POINT",
+  "Brookledge Sugarhouse", 42.428837, -72.662263, "POINT",
+  "North Hadley Sugar Shack", 42.379097, -72.584417,"POINT",
+  "Zawalick's Sugar House", 42.327841, -72.721173, "POINT", 
+  "Hanging Mountain Farm", 42.323968, -72.754591, "POINT", 
+  "Steve's Sugar Shack", 42.307773, -72.771403, "POINT",
+  "Mayval Farm", 42.300522, -72.744081, "POINT"
+)
+
+maplehouse <- my_points %>%
+  st_as_sf(coords = c("lat", "lon"))
+
+leaflet() %>%
+  addTiles() %>%
+  addPolygons() %>%
+  addMarkers(data = maplehouse, popup = ~point)
+```
+
