@@ -5,7 +5,7 @@ date: "4/3/2018"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup, eval=FALSE}
 install.packages("macleish")
 library(tidyverse)
 library(macleish)
@@ -20,6 +20,7 @@ glimpse(whately_2015)
 # Selecting important parts of weather data
 weather_info <- whately_2015 %>%
   select(when, temperature, pressure)
+<<<<<<< HEAD
 
 # Changine the date format of the weather_info dataset 
 date <- formatdate(yyyy-mm-dd) 
@@ -27,4 +28,7 @@ as.interval(date, ymd())
 
 # Joining pressure and tempature form weather data with maple sap data
 
+=======
+glimpse(weather_info)
+>>>>>>> 8ffc0e5b9a0af30428c7418c511861e27f8d396d
 ```
