@@ -31,9 +31,29 @@ as.interval(date, ymd())
 ```
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ```{r}
 library(sf)
 library(leaflet)
+
+
 #creating a leaflet map with the other sugar houses
 
 my_points <- tribble(
@@ -50,9 +70,27 @@ my_points <- tribble(
 maplehouse <- my_points %>%
   st_as_sf(coords = c("lat", "lon"))
 
+st_combine(maplehouse)
+plot(st_union(maplehouse))
+
 leaflet() %>%
   addTiles() %>%
-  addPolygons() %>%
-  addMarkers(data = maplehouse, popup = ~point)
+  addMarkers(data = my_points, popup = ~point)
+
+#mapping area around points
+st_combine(maplehouse)
+plot(st_union(maplehouse))
+
+
+maplehouse <- maplehouse %>%
+  mutate(area = st_area(geometry))
+
+run_points <- maplehouse %>%
+  filter(grepl("Point", point))%>%
+  summarize(N = n())
+
+run_linestring <- run_points %>%
+  st_cast("LINESTRING")
+
 ```
 
