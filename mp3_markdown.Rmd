@@ -22,12 +22,16 @@ weather_info <- whately_2015 %>%
   select(when, temperature, pressure)
 
 # Changine the date format of the weather_info dataset 
-date <- formatdate(yyyy-mm-dd) 
+date <- formatdate(yyyy-mm-dd)
 as.interval(date, ymd())
 
 # Joining pressure and tempature form weather data with maple sap data
 
+<<<<<<< HEAD
+glimpse(weather_info)
+=======
 
+>>>>>>> a19a970bc2df51c4f519382977327683ce396441
 ```
 
 
@@ -57,7 +61,7 @@ library(leaflet)
 #creating a leaflet map with the other sugar houses
 
 my_points <- tribble(
-  ~point, ~lat, ~lon, ~geometry
+  ~point, ~lat, ~lon, ~geometry,
   "Dufresne's Sugarhouse", 42.415240, -72.761856, "POINT",
   "Brookledge Sugarhouse", 42.428837, -72.662263, "POINT",
   "North Hadley Sugar Shack", 42.379097, -72.584417,"POINT",
