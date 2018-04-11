@@ -41,14 +41,42 @@ weather_info_select <- weather_info2 %>%
 View(weather_info_select)
 
 full_dataset <- full_join(maple_sap_select, weather_info_select) 
+View(full_dataset)
+
+# Changine the date format of the weather_info dataset 
+date <- formatdate(yyyy-mm-dd)
+as.interval(date, ymd())
+glimpse(weather_info)
 
 
+```
+
+```{r}
+library(sf)
+library(leaflet)
 
 
+#creating a leaflet map with the other sugar houses
 
-  
-  
+my_points <- tribble(
+  ~point, ~lat, ~lon, ~geometry,
+  "Dufresne's Sugarhouse", 42.415240, -72.761856, "POINT",
+  "Brookledge Sugarhouse", 42.428837, -72.662263, "POINT",
+  "North Hadley Sugar Shack", 42.379097, -72.584417,"POINT",
+  "Zawalick's Sugar House", 42.327841, -72.721173, "POINT", 
+  "Hanging Mountain Farm", 42.323968, -72.754591, "POINT", 
+  "Steve's Sugar Shack", 42.307773, -72.771403, "POINT",
+  "Mayval Farm", 42.300522, -72.744081, "POINT"
+)
 
+maplehouse <- my_points %>%
+  st_as_sf(coords = c("lat", "lon"))
 
+st_combine(maplehouse)
+plot(st_union(maplehouse))
+
+leaflet() %>%
+  addTiles() %>%
+  addMarkers(data = my_points, popup = ~point)
 ```
 
