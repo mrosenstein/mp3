@@ -37,8 +37,13 @@ View(weather_info2)
 
 weather_info_select <- weather_info2 %>%
   select(date2, temperature, pressure) %>%
-  rename(weather_info_select, "when" = "date2") 
+  rename(when = date2) 
 View(weather_info_select)
+
+full_dataset <- full_join(maple_sap_select, weather_info_select) %>%
+View(full_dataset)
+
+
   
   
 
