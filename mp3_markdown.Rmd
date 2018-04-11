@@ -76,21 +76,5 @@ plot(st_union(maplehouse))
 leaflet() %>%
   addTiles() %>%
   addMarkers(data = my_points, popup = ~point)
-
-#mapping area around points
-st_combine(maplehouse)
-plot(st_union(maplehouse))
-
-
-maplehouse <- maplehouse %>%
-  mutate(area = st_area(geometry))
-
-run_points <- maplehouse %>%
-  filter(grepl("Point", point))%>%
-  summarize(N = n())
-
-run_linestring <- run_points %>%
-  st_cast("LINESTRING")
-
 ```
 
