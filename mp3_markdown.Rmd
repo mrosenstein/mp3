@@ -78,5 +78,33 @@ plot(st_union(maplehouse))
 leaflet() %>%
   addTiles() %>%
   addMarkers(data = my_points, popup = ~point)
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+#macleish map with forests and landmarks
+
+library(leaflet)
+
+macleish_layers[["forests"]]
+macleish_layers[["landmarks"]]
+
 ```
 
