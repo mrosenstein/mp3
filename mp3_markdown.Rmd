@@ -24,7 +24,6 @@ mac <- etl("macleish") %>%
 whately <- mac %>%
  tbl("whately") %>%
  collect(n = Inf)
-
 ```
 
 
@@ -62,6 +61,11 @@ full_dataset <- full_join(maple_sap_select, weather_info_select, by = "when", co
   #filter(!is.na(sap))
   #filter(!is.na(pressure))
 View(full_dataset)
+full_dataset %>%
+  group_by(when) %>%
+  summarise(high = max(temperature),
+            low = min(temperature),
+            sap = sap)
 
 ```
 
