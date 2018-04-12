@@ -6,33 +6,28 @@ output:
   html_document: 
     code_folding: hide
 ---
-
-<<<<<<< HEAD
 ```{r setup}
-=======
-```{r setup, eval = FALSE}
->>>>>>> e3b152fa7d964a34cb4248976ebdbb7fef783bc4
 install.packages("macleish")
 library(tidyverse)
 library(macleish)
 library(lubridate)
 library(dplyr)
 load("maple_sap.rda")
+library(sf) # done and done
+library(devtools)
 ```
 
 ```{r}
 # Live weather data 
-macleish <- etl("macleish")
-macleish %>%
-  etl_update()
+mac <- etl("macleish") %>%
+ etl_update()
+whately <- mac %>%
+ tbl("whately") %>%
+ collect(n = Inf)
 
-whately <- macleish %>% 
-  tbl("whately")
-View(whately)
-
-#Converting database into dataframe 
-whately_frame <- as.data.frame(whately[["ops"]])
 ```
+
+
 ```{r}
 
 # Selecting important parts of weather data
