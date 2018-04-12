@@ -8,7 +8,6 @@ output:
     df_print: paged
 ---
 ```{r setup}
-install.packages("macleish")
 library(tidyverse)
 library(macleish)
 library(lubridate)
@@ -118,12 +117,16 @@ leaflet() %>%
 
 library(leaflet)
 
-macleish_layers[["forests"]]
-class(macleish_layers[["landmarks"]])
-
-leaflet() %>%
+macmac <- data.frame(lat = 42.45885, lon = -72.68725)
+macmac_plot <- leaflet() %>%
   addTiles() %>%
-  addMarkers(data = )
+  addMarkers(lng = ~lon, lat = ~lat, data = macmac,
+             popup = "Macleish Property (Buildings, Streams and Trails)") %>%
+  addPolygons(data = macleish_layers[["forests"]],
+              weight = 1, popup = ~Sheet1__Na) %>%
+  addMarkers(data = macleish_layers[["landmarks"]],
+             popup = ~Label)
+macmac_plot
 
 ```
 
