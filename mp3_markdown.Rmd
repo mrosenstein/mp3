@@ -43,9 +43,9 @@ glimpse(weather_info2)
 
 ```{r}
 # Changing the date format of the weather_info dataset 
-date <- formatdate(yyyy-mm-dd)
-as.interval(date, ymd())
-glimpse(weather_info)
+# date <- formatdate(yyyy-mm-dd)
+# as.interval(date, ymd())
+# glimpse(weather_info)
 
 # Joining pressure and tempature from weather data with maple sap data
  maple_sap_select <- maple_sap %>% 
@@ -57,7 +57,7 @@ weather_info_select <- weather_info2 %>%
   rename(when = date2) 
 View(weather_info_select)
 
-full_dataset <- full_join(maple_sap_select, weather_info_select, by = "when", copy = TRUE) %>%
+full_dataset <- full_join(maple_sap_select, weather_info_select, by = "when", copy = TRUE) # %>%
   #filter(!is.na(temperature)) %>%
   #filter(!is.na(sap))
   #filter(!is.na(pressure))
