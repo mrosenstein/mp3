@@ -29,7 +29,6 @@ whately <- mac %>%
 
 
 ```{r}
-
 # Selecting important parts of weather data
 weather_info <- whately %>%
   select(when, temperature, pressure)
