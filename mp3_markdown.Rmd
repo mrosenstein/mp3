@@ -2,34 +2,53 @@
 title: 'Mini Project #3'
 author: "Mae Rosenstein, Talia Seshaiah and Olivia Baldwin"
 date: "4/3/2018"
-output: html_document
+output: 
+  html_document: 
+    code_folding: hide
 ---
 
-```{r setup, eval=FALSE}
+```{r setup, eval = FALSE}
 install.packages("macleish")
 library(tidyverse)
 library(macleish)
 library(lubridate)
+library(dplyr)
 load("maple_sap.rda")
 ```
 
 ```{r}
-# Weather data
-glimpse(whately_2015)
+# Live weather data 
+macleish <- etl("macleish")
+macleish %>%
+  etl_update()
+
+whately <- macleish %>% 
+  tbl("whately")
+View(whately)
+
+#Converting database into dataframe 
+whately_frame <- as.data.frame(whately[["ops"]])
+```
+```{r}
 
 # Selecting important parts of weather data
-weather_info <- whately_2015 %>%
+weather_info <- whately %>%
   select(when, temperature, pressure)
 
 glimpse(weather_info)
 
-# Changine the date format of the weather_info dataset 
-weather_info2 <- whately_2015 %>%
+# Changing the date format of the weather_info dataset 
+weather_info2 <- whately %>%
 mutate(date2 = as_date(when)) 
-View(weather_info2)
+glimpse(weather_info2)
 ```
 
 ```{r}
+# Changing the date format of the weather_info dataset 
+date <- formatdate(yyyy-mm-dd)
+as.interval(date, ymd())
+glimpse(weather_info)
+
 # Joining pressure and tempature from weather data with maple sap data
  maple_sap_select <- maple_sap %>% 
   select(when, sap) 
@@ -40,14 +59,11 @@ weather_info_select <- weather_info2 %>%
   rename(when = date2) 
 View(weather_info_select)
 
-full_dataset <- full_join(maple_sap_select, weather_info_select) 
+full_dataset <- full_join(maple_sap_select, weather_info_select, by = "when", copy = TRUE) %>%
+  #filter(!is.na(temperature)) %>%
+  #filter(!is.na(sap))
+  #filter(!is.na(pressure))
 View(full_dataset)
-
-# Changine the date format of the weather_info dataset 
-date <- formatdate(yyyy-mm-dd)
-as.interval(date, ymd())
-glimpse(weather_info)
-
 
 ```
 
@@ -79,4 +95,13 @@ leaflet() %>%
   addTiles() %>%
   addMarkers(data = my_points, popup = ~point)
 ```
+
+[^1]: GitHub repository
+
+[^https://github.com/mrosenstein/mp3]
+
+
+
+
+
 
