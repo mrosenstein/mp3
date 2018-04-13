@@ -7,7 +7,7 @@ output:
     code_folding: hide
     df_print: paged
 ---
-```{r setup warning = FALSE}
+```{r warning = FALSE}
 library(tidyverse)
 library(macleish)
 library(lubridate)
