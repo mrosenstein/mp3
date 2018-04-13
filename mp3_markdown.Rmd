@@ -56,20 +56,35 @@ weather_info_select <- weather_info2 %>%
   rename(when = date2) 
 View(weather_info_select)
 
-full_dataset <- full_join(maple_sap_select, weather_info_select, by = "when", copy = TRUE) # %>%
-  #filter(!is.na(temperature)) %>%
-  #filter(!is.na(sap))
-  #filter(!is.na(pressure))
+full_dataset <- full_join(maple_sap_select, weather_info_select, by = "when", copy = TRUE)
+
 View(full_dataset)
 temp_data <- full_dataset %>%
   group_by(when) %>%
   summarise(high = max(temperature),
-           low = min(temperature))
+           low = min(temperature),
+           sap = max(sap)) %>%
+  filter(!is.na(sap))
 
 ggplot(temp_data, aes(x = when)) +
   geom_line(aes(y = low), position = "jitter", color = "blue") +
   geom_line(aes(y = high), position = "jitter", color = "red") +
-  geom_line(data = full_dataset, aes(y = sap))
+  geom_bar(aes(y = sap), stat = "identity", position = position_dodge(), color = "brown")
+
+```
+
+```{r warning = FALSE}
+mass_data <- tribble(
+  ~year, ~yield_per_tap, ~production, ~opener, ~closer, ~season_length,
+  2015, 0.242, 75000, 2015-03-14, 2015-04-11, 28,
+  2016, 0.244, 77000, 2016-01-13, 2016-04-20, 32,
+  2017, 0.263, 84000, 2017-01-10, 2017-04-13, 42
+)
+mass_data <- as.data.frame(mass_data)
+
+ggplot(mass_data, aes(x = year, y = season_length)) +
+  geom_bar(aes(y = yield_per_tap), stat = "identity", position = position_dodge()) +
+  geom_bar(aes(y = season_length), stat = "identity", position = position_dodge())
 
 ```
 
