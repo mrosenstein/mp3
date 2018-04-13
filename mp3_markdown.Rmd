@@ -15,6 +15,7 @@ library(dplyr)
 load("maple_sap.rda")
 library(sf) # done and done
 library(devtools)
+library(leaflet)
 ```
 
 ```{r warning = FALSE}
@@ -69,7 +70,17 @@ temp_data <- full_dataset %>%
 ggplot(temp_data, aes(x = when)) +
   geom_line(aes(y = low), position = "jitter", color = "blue") +
   geom_line(aes(y = high), position = "jitter", color = "red") +
-  geom_bar(aes(y = sap), stat = "identity", position = position_dodge(), color = "brown")
+  labs(title = "Temperature vs Time during the mapling season",
+       x = "Mapling Seasons, 2013-2017",
+       y = "Temperature (degrees Fahrenheit)",
+       caption = "Source: whately weather package")
+ggplot(temp_data, aes(x = when)) +
+  geom_bar(aes(y = sap), stat = "identity", position = position_dodge(), color = "#996600") +
+  labs(title = "Sap vs Time during the mapling season",
+       x = "Mapling Seasons, 2013-2017",
+       y = "Sap collection (gallons)",
+       caption = "Source: maple sap data, macleish package")
+  
 
 ```
 
@@ -83,11 +94,16 @@ mass_data <- tribble(
 mass_data <- as.data.frame(mass_data)
 
 ggplot(mass_data, aes(x = year, y = season_length)) +
-  geom_bar(aes(y = yield_per_tap), stat = "identity", position = position_dodge()) +
-  geom_bar(aes(y = season_length), stat = "identity", position = position_dodge())
+  geom_bar(aes(y = season_length, fill = yield_per_tap), stat = "identity", position = position_dodge()) +
+  labs(title = "Season Length vs Time during the mapling season",
+       x = "Mapling Seasons, 2013-2017",
+       y = "Season Length (days)",
+       caption = "Source: United States Maple Syrup Production, National Agricultural Statistics Service") +
+  scale_fill_continuous(low = "#996600", high = "#663300", name = "Yield per tap\n(gallons/number of taps)")
 
 ```
 
+## Local sugarhouses and sugaring stations
 ```{r warning = FALSE}
 library(sf)
 library(leaflet)
@@ -128,10 +144,9 @@ leaflet() %>%
 
 
 
+## MacLeish Property with attention to its forests.
 ```{r warning = FALSE}
 #macleish map with forests and landmarks
-
-library(leaflet)
 
 macmac <- data.frame(lat = 42.45885, lon = -72.68725)
 macmac_plot <- leaflet() %>%
