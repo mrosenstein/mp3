@@ -7,7 +7,7 @@ output:
     code_folding: hide
     df_print: paged
 ---
-```{r setup}
+```{r setup warning = FALSE}
 library(tidyverse)
 library(macleish)
 library(lubridate)
@@ -17,7 +17,7 @@ library(sf) # done and done
 library(devtools)
 ```
 
-```{r}
+```{r warning = FALSE}
 # Live weather data 
 mac <- etl("macleish") %>%
  etl_update()
@@ -27,7 +27,7 @@ whately <- mac %>%
 ```
 
 
-```{r}
+```{r warning = FALSE}
 # Selecting important parts of weather data
 weather_info <- whately %>%
   select(when, temperature, pressure)
@@ -40,7 +40,7 @@ mutate(date2 = as_date(when))
 glimpse(weather_info2)
 ```
 
-```{r}
+```{r warning = FALSE}
 # Changing the date format of the weather_info dataset 
 # date <- formatdate(yyyy-mm-dd)
 # as.interval(date, ymd())
@@ -61,14 +61,19 @@ full_dataset <- full_join(maple_sap_select, weather_info_select, by = "when", co
   #filter(!is.na(sap))
   #filter(!is.na(pressure))
 View(full_dataset)
-full_dataset %>%
+temp_data <- full_dataset %>%
   group_by(when) %>%
   summarise(high = max(temperature),
            low = min(temperature))
 
+ggplot(temp_data, aes(x = when, y = low)) +
+  geom_line()
+  geom_line(data = temp_data, y = low, color = "blue") +
+  geom_line(high, color = "red")
+
 ```
 
-```{r}
+```{r warning = FALSE}
 library(sf)
 library(leaflet)
 
@@ -108,7 +113,7 @@ leaflet() %>%
 
 
 
-```{r}
+```{r warning = FALSE}
 #macleish map with forests and landmarks
 
 library(leaflet)
