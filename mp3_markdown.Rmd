@@ -86,12 +86,6 @@ my_points <- tribble(
   "Mayval Farm", 42.300522, -72.744081, "POINT"
 )
 
-maplehouse <- my_points %>%
-  st_as_sf(coords = c("lat", "lon"))
-
-st_combine(maplehouse)
-plot(st_union(maplehouse))
-
 leaflet() %>%
   addTiles() %>%
   addMarkers(data = my_points, popup = ~point)
