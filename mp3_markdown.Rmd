@@ -66,10 +66,10 @@ temp_data <- full_dataset %>%
   summarise(high = max(temperature),
            low = min(temperature))
 
-ggplot(temp_data, aes(x = when, y = low)) +
-  geom_line()
-  geom_line(data = temp_data, y = low, color = "blue") +
-  geom_line(high, color = "red")
+ggplot(temp_data, aes(x = when)) +
+  geom_line(aes(y = low), position = "jitter", color = "blue") +
+  geom_line(aes(y = high), position = "jitter", color = "red") +
+  geom_line(data = full_dataset, aes(y = sap))
 
 ```
 
