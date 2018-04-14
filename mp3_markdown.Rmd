@@ -16,9 +16,6 @@ load("maple_sap.rda")
 library(sf) # done and done
 library(devtools)
 library(leaflet)
-```
-
-```{r warning = FALSE}
 # Live weather data 
 mac <- etl("macleish") %>%
  etl_update()
