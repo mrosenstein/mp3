@@ -7,6 +7,7 @@ output:
     code_folding: hide
     df_print: paged
 ---
+We examined the maple sugaring season as it pertains to MacLeish. Using the maple_sap data set on gallons of sap collected and the weather data, we predicted the start date, end date, and yield for sugaring season. We utilized the MacLeish package to examine the weather patterns at the field station during the harvest, as well as using the spatial data of nearby maple sugarhouses in southwestern Massachusetts. We hope to use maple collection data to further extrapolate our weather information (using the Northeast Maple Syrup Production data from the National Agricultural Statistics Service**).
 ```{r warning = FALSE}
 library(tidyverse)
 library(macleish)
@@ -24,45 +25,40 @@ whately <- mac %>%
  collect(n = Inf)
 ```
 
-
 ```{r warning = FALSE}
 # Selecting important parts of weather data
 weather_info <- whately %>%
-  select(when, temperature, pressure)
-
-glimpse(weather_info)
+  select(when, temperature)
 
 # Changing the date format of the weather_info dataset 
-weather_info2 <- whately %>%
-mutate(date2 = as_date(when)) 
-glimpse(weather_info2)
+weather_info2 <- weather_info %>%
+mutate(date2 = as_date(when))
 ```
 
+The following table joined the whateley weather data with the sap collection data and analyzed the temperature highs and lows relative to sap collection. The red line indicates the temperature high of the date and the blue line represents the temperature low.
 ```{r warning = FALSE}
-# Changing the date format of the weather_info dataset 
-# date <- formatdate(yyyy-mm-dd)
-# as.interval(date, ymd())
-# glimpse(weather_info)
-
-# Joining pressure and tempature from weather data with maple sap data
+# Joining tempature from weather data with maple sap data
  maple_sap_select <- maple_sap %>% 
-  select(when, sap) 
-  View(maple_sap_select)
+  select(when, sap)
+
 
 weather_info_select <- weather_info2 %>%
-  select(date2, temperature, pressure) %>%
-  rename(when = date2) 
-View(weather_info_select)
+  select(date2, temperature) %>%
+  rename(when = date2)
+
 
 full_dataset <- full_join(maple_sap_select, weather_info_select, by = "when", copy = TRUE)
 
-View(full_dataset)
+
 temp_data <- full_dataset %>%
   group_by(when) %>%
   summarise(high = max(temperature),
            low = min(temperature),
+           diff = high-low,
            sap = max(sap)) %>%
-  filter(!is.na(sap))
+  filter(!is.na(sap)) %>%
+  arrange(desc(sap))
+temp_data
 
 ggplot(temp_data, aes(x = when)) +
   geom_line(aes(y = low), position = "jitter", color = "blue") +
@@ -70,13 +66,15 @@ ggplot(temp_data, aes(x = when)) +
   labs(title = "Temperature vs Time during the mapling season",
        x = "Mapling Seasons, 2013-2017",
        y = "Temperature (degrees Fahrenheit)",
-       caption = "Source: whately weather package")
+       caption = "Source: whately weather package") +
+  theme(axis.text.x = element_text(size = rel(0.7), angle = 60, hjust = 1))
 ggplot(temp_data, aes(x = when)) +
-  geom_bar(aes(y = sap), stat = "identity", position = position_dodge(), color = "#996600") +
+  geom_bar(aes(y = sap), stat = "identity", position = position_dodge(), fill = "#996600") +
   labs(title = "Sap vs Time during the mapling season",
        x = "Mapling Seasons, 2013-2017",
        y = "Sap collection (gallons)",
-       caption = "Source: maple sap data, macleish package")
+       caption = "Source: maple sap data, macleish package") +
+  theme(axis.text.x = element_text(size = rel(0.7), angle = 60, hjust = 1))
   
 
 ```
@@ -84,11 +82,12 @@ ggplot(temp_data, aes(x = when)) +
 ```{r warning = FALSE}
 mass_data <- tribble(
   ~year, ~yield_per_tap, ~production, ~opener, ~closer, ~season_length,
-  2015, 0.242, 75000, 2015-03-14, 2015-04-11, 28,
-  2016, 0.244, 77000, 2016-01-13, 2016-04-20, 32,
-  2017, 0.263, 84000, 2017-01-10, 2017-04-13, 42
+  2015, 0.242, 75000, "03-14", "04-11", 28,
+  2016, 0.244, 77000, "01-13", "04-20", 32,
+  2017, 0.263, 84000, "01-10", "04-13", 42
 )
 mass_data <- as.data.frame(mass_data)
+mass_data
 
 ggplot(mass_data, aes(x = year, y = season_length)) +
   geom_bar(aes(y = season_length, fill = yield_per_tap), stat = "identity", position = position_dodge()) +
