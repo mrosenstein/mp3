@@ -164,11 +164,3 @@ macmac_plot
 [^1]: GitHub repository
 
 [^https://github.com/mrosenstein/mp3]
-
-
-
-
-
-
-
-
