@@ -7,7 +7,9 @@ output:
     code_folding: hide
     df_print: paged
 ---
+## Research Question
 We examined the maple sugaring season as it pertains to MacLeish. Using the maple_sap data set on gallons of sap collected and the weather data, we predicted the start date, end date, and yield for sugaring season. We utilized the MacLeish package to examine the weather patterns at the field station during the harvest, as well as using the spatial data of nearby maple sugarhouses in southwestern Massachusetts. We hope to use maple collection data to further extrapolate our weather information (using the Northeast Maple Syrup Production data from the National Agricultural Statistics Service**).
+The most important part of weather that relates to sap collection is the temperature of the environment. The conditions of a temperature change of at least 1.1 degrees Celsius during the day yields the best amount of the sap, for the sap is able to move up and down the tree^2^. The season length has varied recently due to climate change, but according to the National Agricultural Statistics Service, an average mapling season is an average of 30 days between mid-February and late March^3^. 
 ```{r warning = FALSE}
 library(tidyverse)
 library(macleish)
@@ -34,8 +36,9 @@ weather_info <- whately %>%
 weather_info2 <- weather_info %>%
 mutate(date2 = as_date(when))
 ```
+## Data Wrangling and Analysis
 
-The following table joined the whateley weather data with the sap collection data and analyzed the temperature highs and lows relative to sap collection. The red line indicates the temperature high of the date and the blue line represents the temperature low.
+The following table joined the whateley weather data with the sap collection data and analyzed the temperature highs and lows relative to sap collection. For the graphs, the red line indicates the temperature high of the date, the blue line represents the temperature low, the purple line is the difference and the brown bars correspond to the amount of sap collected. This shows how the dates with a large temperature difference corresponds with greater amounts of sap collected.
 ```{r warning = FALSE}
 # Joining tempature from weather data with maple sap data
  maple_sap_select <- maple_sap %>% 
@@ -63,6 +66,7 @@ temp_data
 ggplot(temp_data, aes(x = when)) +
   geom_line(aes(y = low), position = "jitter", color = "blue") +
   geom_line(aes(y = high), position = "jitter", color = "red") +
+  geom_line(aes(y = diff), position = "jitter", color = "purple") +
   labs(title = "Temperature vs Time during the mapling season",
        x = "Mapling Seasons, 2013-2017",
        y = "Temperature (degrees Fahrenheit)",
@@ -75,10 +79,9 @@ ggplot(temp_data, aes(x = when)) +
        y = "Sap collection (gallons)",
        caption = "Source: maple sap data, macleish package") +
   theme(axis.text.x = element_text(size = rel(0.7), angle = 60, hjust = 1))
-  
 
 ```
-
+This data comes from a survey on maple production. The longer the average mapling season, the greater the yield per tap, which is mapped to color on a gradient. This shows the importance of predicting the sap seasons, for efficiency and sustainability.
 ```{r warning = FALSE}
 mass_data <- tribble(
   ~year, ~yield_per_tap, ~production, ~opener, ~closer, ~season_length,
@@ -100,6 +103,7 @@ ggplot(mass_data, aes(x = year, y = season_length)) +
 ```
 
 ## Local sugarhouses and sugaring stations
+These business reside within 25 miles of MacLeish. There locals are surrounding by maple forests and use pipelines to bring the sap from the tap to the sugarhouses, according to Massachusetts Maple Producers Association and MassGrown via Mass.gov^4^. These business are sustainable due to their using this equipment to produce maple products. However, since they are businesses profiting and relying on this venture, they rival Smith because Smith and MacLeish's maple sugaring is recreational.
 ```{r warning = FALSE}
 library(sf)
 library(leaflet)
@@ -141,9 +145,10 @@ leaflet() %>%
 
 
 ## MacLeish Property with attention to its forests.
+This shows the MacLeish property, along with landmarks like the environmental classroom and landforms like the sugar maple forests where the sap is tapped from.
 ```{r warning = FALSE}
 #macleish map with forests and landmarks
-
+pal <- colorFactor("Accent", NULL)
 macmac <- data.frame(lat = 42.45885, lon = -72.68725)
 macmac_plot <- leaflet() %>%
   addTiles() %>%
@@ -152,11 +157,20 @@ macmac_plot <- leaflet() %>%
   addPolygons(data = macleish_layers[["forests"]],
               weight = 1, popup = ~Sheet1__Na) %>%
   addMarkers(data = macleish_layers[["landmarks"]],
-             popup = ~Label)
+             popup = ~Label) %>%
+  addPolylines(lng = ~lon, lat = ~lat, data = macmac, group = macleish_layers[["landmarks"]], color = ~pal)
 macmac_plot
 
 ```
 
-[^1]: GitHub repository
+## Conclusions
 
-[^https://github.com/mrosenstein/mp3]
+We suggest that the team at MacLeish use our weather analysis to devise the best days for tapping sap. For example, if the whateley weather tower sends out updates every ten minutes, the tea, could see if there was a temperature difference of at least 6.6 degrees Celsius in the last 24 hours, and they can use that information to decide if it would practical to use the tapping equipment that day. We understand that since the sugaring is recreational, it would not be feasible to make a sugarhouse on site, and since the land is protected by a trust, it would likely be impossible. Therefore, the sugaring and boiling down of the sap can continue to take place at Smith in order to give students more access to this resource. In order to continue to be sustainable, recording data in the form of our `temp_data` table would be useful for further knowledge on the success of tapping the MacLeish trees. Writing down the high and low temperatures and the temperature difference as well as the sap yield are all important information and easy to write down for each day that they tap, for it will further analyses like these to help predict the best times to tap.
+
+![***THANKS FOR READING OUR ANALYSIS***!!](https://memegenerator.net/img/instances/64343930/only-you-can-prevent-messy-data.jpg)
+
+^1^GitHub repository: [^https://github.com/mrosenstein/mp3]
+^2^Massachusetts Maple Producers Association Information: [^https://www.massmaple.org/about-maple-syrup/]
+^3^USDA Maple Data: [^https://www.nass.usda.gov/Statistics_by_State/New_England_includes/Publications/Current_News_Release/2017/2017_Maple_Syrup.pdf]
+^4^MassGrown Map: [^https://massnrc.org/farmlocator/map.aspx]
+
