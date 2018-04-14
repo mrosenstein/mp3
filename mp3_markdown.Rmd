@@ -1,5 +1,5 @@
 ---
-title: 'Mini Project #3'
+title: "You can't expect to make maple syrup without using some messy data"
 author: "Mae Rosenstein, Talia Seshaiah and Olivia Baldwin"
 date: "4/15/2018"
 output: 
